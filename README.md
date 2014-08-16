@@ -7,6 +7,10 @@ Many local configuration files contain a mixture of keys that it would be fine t
 
 It uses monkey-patching to add its functionality automatically to YAML loading and the dotenv gem (if installed).
 
+### INSTALL:
+
+From RubyGems: [![Gem Version](https://badge.fury.io/rb/keyth.svg)](http://badge.fury.io/rb/keyth)
+
 ### EXAMPLE USAGE:
 
 For example, my_values.yml was:
