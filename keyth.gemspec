@@ -7,7 +7,8 @@ Gem::Specification.new do |s|
   s.description = 'Handles named keys for use in config files'
   s.authors     = ['K M Lawrence']
   s.email       = 'keith@kludge.co'
-  s.files       = ['lib/keyth.rb', 'bin/keyth_admin.rb']
+  s.executables = ['keyth_admin']
+  s.files       = ['lib/keyth.rb', 'bin/keyth_admin']
   s.homepage    = 'http://rubygems.org/gems/keyth'
   s.license     = 'MIT'
 end
