@@ -5,6 +5,8 @@ A little gem to manage keys that aren't supposed to leave the machine.
 
 Many local configuration files contain a mixture of keys that it would be fine to commit to the code repo and keys that it would be dangerous to commit to the code repo. Keyth allows you to refer to those values symbolically.
 
+It uses monkey-patching to add its functionality automatically to YAML loading and the dotenv gem (if installed).
+
 ### EXAMPLE USAGE:
 
 For example, my_values.yml was:
@@ -23,16 +25,22 @@ For example, my_values.yml was:
         their_aws: keyth:client/AWS_ACCESS_KEY
         machine_type: t3.small
 
-and you load it like this:
+...if you create the required keys in your private store:
 
-    settings = Keyth.fetch_keys YAML.load(File.open('my_values.yml'))
+    keyth_admin add mycompany/AWS_ACCESS_KEY ABABABABAB
+    keyth_admin add client/AWS_ACCESS_KEY CDCDCDCDCD
+
+...it loads automatically when you read it as a YAML file.
+
+    settings = YAML.load(File.open('my_values.yml'))
+    settings['my']['values']['our_aws']
+    -> "ABABABABABAB"
+
 
 ### TOOLS:
 
 bin/keyth_admin allows you to add, remove, or list keys in your local store
 
 ### TODO:
-
-Mixins for YAML to allow keyth: markers to be loaded automatically
 
 Support code for Ruby GitHooks that will automatically flag any key listed in the key repository that has somehow escaped into commitable files.
