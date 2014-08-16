@@ -1,7 +1,8 @@
 # encoding: utf-8
-require 'spec_helper'
 require 'tempfile'
 require 'yaml'
+require 'dotenv'
+require 'spec_helper'
 
 describe Keyth do
   before :each do
@@ -60,17 +61,41 @@ describe Keyth do
     end
   end
 
-  describe '#load_yaml' do
-    it 'loads a YAML File with the keys translated' do
-      Keyth.add_key('keyth-testing/TEST_KEY', 'TEST_VALUE')
-      test_keys = { es: { key1: 'boring', key2: 'keyth:keyth-testing/TEST_KEY' } }
-      yaml_file = Tempfile.new('keyth_spec_test')
-      yaml_file.write(test_keys.to_yaml)
-      yaml_file.close
-      keys = Keyth.load_yaml(File.open(yaml_file))
-      yaml_file.unlink
-      expect(keys[:es][:key2]).to eq('TEST_VALUE')
+  describe 'DotEnv support' do
+    describe 'DotEnv Monkey-patch' do
+      it 'loads a .env file with the keys translated' do
+        Keyth.add_key('keyth-testing/TEST_KEY', 'TEST_VALUE')
+        Dotenv.load
+        expect(ENV['CLICK']).to eq('TEST_VALUE')
+      end
     end
   end
 
+  describe 'YAML Support' do
+    before :each do
+      Keyth.add_key('keyth-testing/TEST_KEY', 'TEST_VALUE')
+      test_keys = { es: { key1: 'boring', key2: 'keyth:keyth-testing/TEST_KEY' } }
+      @yaml_file = Tempfile.new('keyth_spec_test')
+      @yaml_file.write(test_keys.to_yaml)
+      @yaml_file.close
+    end
+
+    after :each do
+      @yaml_file.unlink
+    end
+
+    describe '#load_yaml' do
+      it 'loads a YAML File with the keys translated' do
+        keys = Keyth.load_yaml(File.open(@yaml_file))
+        expect(keys[:es][:key2]).to eq('TEST_VALUE')
+      end
+    end
+
+    describe 'YAML Monkey-patch' do
+      it 'loads a YAML File with the keys automatically translated' do
+        keys = YAML.load(File.open(@yaml_file))
+        expect(keys[:es][:key2]).to eq('TEST_VALUE')
+      end
+    end
+  end
 end

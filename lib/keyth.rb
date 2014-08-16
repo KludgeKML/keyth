@@ -1,5 +1,7 @@
 # encoding: utf-8
 require 'yaml'
+require 'keyth/yaml'
+require 'keyth/dotenv'
 
 # Keyhandling module with various functions for keeping keys
 # out of configuration files.
@@ -45,7 +47,7 @@ module Keyth
 
   def self.load_yaml(file)
     load_keyfile unless @key_list
-    keys = YAML.load(file)
+    keys = YAML.pre_keyth_load(file)
     fetch_keys(keys)
   end
 
@@ -57,13 +59,17 @@ module Keyth
         obj[k] = fetch_keys(v)
       end
     when obj.respond_to?(:each)
-      obj.each do |v|
-        fetch_keys(v)
+      obj.each_with_index do |v, i|
+        obj[i] = fetch_keys(v)
       end
     when obj.is_a?(String)
-      obj.gsub!(/^keyth\:(.*)/) { get_key(Regexp.last_match[1]) }
+      obj = obj.gsub(/^keyth\:(.*)/) { get_key(Regexp.last_match[1]) }
     end
     obj
+  end
+
+  class << self
+    alias_method(:apply_to, :fetch_keys)
   end
 
   def self.namespace(namespace)
@@ -79,7 +85,7 @@ module Keyth
 
   def self.load_keyfile
     if File.file?(keyfile_location)
-      @key_list = YAML.load(File.open(keyfile_location))
+      @key_list = YAML.pre_keyth_load(File.open(keyfile_location))
     else
       @key_list = {}
     end
@@ -91,10 +97,6 @@ module Keyth
   end
 end
 
-# puts Keyth.fetch_keys 'keyth:es-upbeat-home-dev/NEW_RELIC_LICENSE'
 
-# keys = YAML.load(File.open('../my_deets.yml'))
-# keys = Keyth.fetch_keys(keys)
-# puts keys.to_s
 
-# puts Keyth.keys.to_s
+
