@@ -1,0 +1,37 @@
+#! /usr/bin/ruby
+# encoding: utf-8
+require '../lib/keyth'
+
+ADD_USAGE = 'keyth_admin add <keyname> <keyvalue>'
+DELETE_USAGE = 'keyth_admin delete <keyname>'
+LIST_USAGE = 'keyth_admin list [namespace]'
+
+def show_errors(errors)
+  return if errors.size == 0
+  puts 'Usage: ' + errors[0]
+  errors[1..-1].each { |e| puts '       ' + e }
+  exit 1
+end
+
+def check_params(params)
+  case params[0]
+  when 'add'
+    show_errors([ADD_USAGE]) unless params[1] && params[2]
+  when 'delete'
+    show_errors([DELETE_USAGE]) unless params[1]
+  when 'list'
+  else
+    show_errors([ADD_USAGE, DELETE_USAGE, LIST_USAGE])
+  end
+end
+
+check_params(ARGV)
+
+case ARGV[0]
+when 'add'
+  Keyth.add_key(ARGV[1], ARGV[2])
+when 'delete'
+  Keyth.delete_key(ARGV[1])
+when 'list'
+  Keyth.keys(ARGV[1]).each { |k, v| puts "#{k}=#{v}" }
+end
