@@ -1,6 +1,6 @@
 #! /usr/bin/ruby
 # encoding: utf-8
-require '../lib/keyth'
+require 'keyth'
 
 ADD_USAGE = 'keyth_admin add <keyname> <keyvalue>'
 DELETE_USAGE = 'keyth_admin delete <keyname>'
