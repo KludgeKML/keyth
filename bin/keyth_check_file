@@ -1,0 +1,26 @@
+#! /usr/bin/env ruby
+# encoding: utf-8
+require 'keyth'
+
+unless ARGV[0]
+  puts 'Usage: keyth_check_file <file>'
+  exit 1
+end
+
+unless File.file?(ARGV[0])
+  puts "ERROR: #{ARGV[0]} not found"
+  exit 1
+end
+
+errors = []
+file_contents = File.read(ARGV[0])
+Keyth.keys.each do |k, v|
+  if file_contents.include?(v)
+    errors << "Found: #{v} replace with keyth:#{k}"
+  end
+end
+
+exit 0 if errors.empty?
+
+errors.each { |e| puts e }
+exit 1

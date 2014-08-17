@@ -43,8 +43,7 @@ For example, my_values.yml was:
 
 ### TOOLS:
 
-bin/keyth_admin allows you to add, remove, or list keys in your local store
+keyth_admin allows you to add, remove, or list keys in your local store
 
-### TODO:
+keyth_check_file checks to see if a supplied file contains any of the keys listed in the keystore, and fails with suggested replacements if any are found. This can be called from (for example) a git hook to check that committed files don't contain any of the keys you're storing locally.
 
-Support code for Ruby GitHooks that will automatically flag any key listed in the key repository that has somehow escaped into commitable files.
