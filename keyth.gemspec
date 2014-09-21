@@ -1,8 +1,8 @@
 # encoding: utf-8
 Gem::Specification.new do |s|
   s.name        = 'keyth'
-  s.version     = '0.2.2'
-  s.date        = '2014-08-19'
+  s.version     = '0.3.2'
+  s.date        = '2014-09-21'
   s.summary     = 'Keyth!'
   s.description = 'Handles named keys for use in config files'
   s.authors     = ['K M Lawrence']
