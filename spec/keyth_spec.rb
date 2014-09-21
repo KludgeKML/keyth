@@ -65,7 +65,14 @@ describe Keyth do
     describe 'DotEnv Monkey-patch' do
       it 'loads a .env file with the keys translated' do
         Keyth.add_key('keyth-testing/TEST_KEY', 'TEST_VALUE')
-        Dotenv.load
+        file = Tempfile.new('test_env')
+        begin
+          file.write('CLICK=keyth:keyth-testing/TEST_KEY')
+          file.close
+          Dotenv.load file.path
+        ensure
+          file.unlink   # deletes the temp file
+        end
         expect(ENV['CLICK']).to eq('TEST_VALUE')
       end
     end
