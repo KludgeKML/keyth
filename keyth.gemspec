@@ -12,4 +12,6 @@ Gem::Specification.new do |s|
                    'bin/keyth_admin', 'bin/keyth_check_file']
   s.homepage    = 'http://rubygems.org/gems/keyth'
   s.license     = 'MIT'
+
+  s.add_development_dependency 'dotenv'
 end
